@@ -18,17 +18,16 @@ enlace: https://github.com/VictorKrull/Proyecto-Ecuaciones
 #include <string>
 #include <vector>
 #include <cmath>
-#include <cstdlib>
 #include <cctype>
 #include "validacion_datos.h"
 #include "menu.h"
 #include "barra_progreso.h"
+#include "consola.h"
 #include "rlutil.h"
 
 using namespace std;
 using namespace rlutil;
 
-void editar_consola();
 char preguntar();
 void resolver_ecuacion_lineal(double, double);
 void resolver_ecuacion_cuadratica(double, double, double);
@@ -36,27 +35,27 @@ void resolver_ecuacion_cubica(double, double, double, double);
 
 int main()
 {
-	editar_consola();
-
-	int op;
+	int opcion;
 	double coef_principal, ter_cuadratico, ter_lineal, ter_independiente;
-	char rpta;
+	char respuesta;	
 	vector<string> opciones_menu = {"Resolver ecuaci\242n lineal", "Resolver ecuaci\242n cuadr\240tica", "Resolver ecuaci\242n c\243bica"};
+	
+	editar_consola("CALCULADORA DE ECUACIONES", 1, 10);
 
 	do
 	{
 		crear_menu("\tMENU PRINCIPAL", opciones_menu, 3);
 
 		do {
-			op = capturar_i("Seleccione una opci\242n:\t\t");
+			opcion = capturar_i("Seleccione una opci\242n:\t\t");
 
-			if (op != 1 && op != 2 && op != 3)
+			if (opcion != 1 && opcion != 2 && opcion != 3)
 				cerr << "ERROR. La opci\242n seleccionada no existe.\n\n";
-		} while (op != 1 && op != 2 && op != 3);
+		} while (opcion != 1 && opcion != 2 && opcion != 3);
 
 		cls();
 
-		switch (op)
+		switch (opcion)
 		{
 			case 1: {
 				cout << "La ecuaci\242n tiene la forma:\n\n" << setw(47) << "AX + B = 0.\n\n";
@@ -69,11 +68,11 @@ int main()
 				} while (coef_principal == 0.0);
 
 				ter_independiente = capturar_d("Ingrese el valor de B:\t");
-
+				
 				cls();
-				mostrar_barra_progreso(10, "Resolviendo ecuaci\242n...\n\n", char(219));
+				mostrar_barra_progreso(10, "\t    Resolviendo ecuaci\242n...", char(219));				
 				resolver_ecuacion_lineal(coef_principal, ter_independiente);
-				rpta = preguntar();
+				respuesta = preguntar();
 			} break;
 
 			case 2: {
@@ -90,9 +89,9 @@ int main()
 				ter_independiente = capturar_d("Ingrese el valor de C:\t");
 
 				cls();
-				mostrar_barra_progreso(25, "Resolviendo ecuaci\242n...\n\n", char(219));
+				mostrar_barra_progreso(25, "\t    Resolviendo ecuaci\242n...", char(219));				
 				resolver_ecuacion_cuadratica(coef_principal, ter_lineal, ter_independiente);
-				rpta = preguntar();
+				respuesta = preguntar();
 			} break;
 
 			case 3: {
@@ -110,14 +109,14 @@ int main()
 				ter_independiente = capturar_d("Ingrese el valor de D:\t");
 
 				cls();
-				mostrar_barra_progreso(50, "Resolviendo ecuaci\242n...\n\n", char(219));
+				mostrar_barra_progreso(50, "\t    Resolviendo ecuaci\242n...", char(219));				
 				resolver_ecuacion_cubica(coef_principal, ter_cuadratico, ter_lineal, ter_independiente);
-				rpta = preguntar();
+				respuesta = preguntar();
 			} break;
 		}
-	} while (rpta == 'S');
+	} while (respuesta == 'S');
 
-	if (rpta == 'N')
+	if (respuesta == 'N')
 	{
 		cout << "Gracias por utilizar la aplicaci\242n. Si encuentra alg\243n bug, por favor rep\242rtelo al correo maxdr.mat\100gmail.com.\n\n";		
 		anykey("Presione cualquier tecla para cerrar el programa.\n");
@@ -126,29 +125,21 @@ int main()
 	return 0;
 }
 
-void editar_consola()
-{
-	setConsoleTitle("CALCULADORA DE ECUACIONES");
-	setBackgroundColor(1);
-	cls();
-	setColor(10);
-}
-
 char preguntar()
 {
-	char respuesta;
+	char rpta;
 
 	do {
-		respuesta = capturar_c("\250Desea resolver otra ecuaci\242n? (S)---(N):\t");		
-		respuesta = toupper(respuesta);
+		rpta = capturar_c("\250Desea resolver otra ecuaci\242n? (S)---(N):\t");
+		rpta = toupper(rpta);
 
-		if (respuesta != 'S' && respuesta != 'N')
+		if (rpta != 'S' && rpta != 'N')
 			cerr << "ERROR. La respuesta es incorrecta.\n\n";
-	} while (respuesta != 'S' && respuesta != 'N');
+	} while (rpta != 'S' && rpta != 'N');
 	
 	cls();
 
-	return respuesta;	
+	return rpta;
 }
 
 void resolver_ecuacion_lineal(double coef_prin, double ter_indep)
